@@ -11,6 +11,8 @@ DLIST_DIR = DoubleLinkedList
 QUEUE_DIR = GenQueue
 BIN_DIR = bin
 LIB_DIR = lib
+$(shell mkdir -p $(BIN_DIR))
+$(shell mkdir -p $(LIB_DIR))
 
 # Creating a static library for the project
 TARGET_STATIC_LIB = $(LIB_DIR)/lib$(PROJECT_NAME).a
@@ -19,7 +21,7 @@ ALL_OBJS = $(BIN_DIR)/vector.o $(BIN_DIR)/HashMap.o $(BIN_DIR)/bin_tree.o $(BIN_
 
 all: $(TARGET_STATIC_LIB)
 
-$(TARGET_STATIC_LIB): $(ALL_OBJS) | $(LIB_DIR)
+$(TARGET_STATIC_LIB): $(ALL_OBJS) 
 	$(AR) $@ $^
 
 # Create bin directory if not exists
@@ -30,22 +32,22 @@ $(BIN_DIR):
 $(LIB_DIR):
 	mkdir -p $(LIB_DIR)
 
-$(BIN_DIR)/%.o: $(VECTOR_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(VECTOR_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BIN_DIR)/%.o: $(HASH_MAP_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(HASH_MAP_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BIN_DIR)/%.o: $(BIN_TREE_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(BIN_TREE_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BIN_DIR)/%.o: $(GEN_HEAP_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(GEN_HEAP_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BIN_DIR)/%.o: $(DLIST_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(DLIST_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BIN_DIR)/%.o: $(QUEUE_DIR)/%.c | $(BIN_DIR)
+$(BIN_DIR)/%.o: $(QUEUE_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean:
