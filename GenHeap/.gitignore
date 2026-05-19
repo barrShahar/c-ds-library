@@ -1,0 +1,8 @@
+# build output
+bin/
+
+# editor settings
+.vscode/
+
+# OS noise
+.DS_Store

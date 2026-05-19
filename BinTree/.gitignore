@@ -1,0 +1,36 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.out
+*.exe
+*.elf
+*.map
+*.d
+
+# Debug / profiling
+*.dSYM/
+*.profraw
+gmon.out
+core
+core.*
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local build dirs
+build/
+dist/
+cmake-build-*/
+
+# Project-specific build output
+bin/
+
