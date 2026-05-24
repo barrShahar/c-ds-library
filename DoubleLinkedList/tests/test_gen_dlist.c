@@ -16,7 +16,54 @@ static int stop_at_5(void* _element, void* _context)
     return *(int*)_element != 5;
 }
 
+static int compareInts(void* a, void* b)
+{
+    return *(int*)a == *(int*)b;
+}
+
 /* ── tests ── */
+
+static void test_list_find(void)
+{
+    printf("test_list_find\n");
+    List* list = ListCreate();
+
+    int target = 42;
+
+    ListItr expectedNull = ListFind(list, &target, compareInts);
+
+    assert(expectedNull == NULL);
+    int a = 1, b = 2, c = 3;
+
+    ListPushHead(list, &a);
+    ListPushHead(list, &b);
+    ListPushHead(list, &c);
+    assert(ListSize(list) == 3);
+
+    expectedNull = ListFind(list, &target, compareInts);
+    assert(expectedNull == NULL);
+
+    int numbers[] = {5, 42, 13};
+    for (size_t i = 0 ; i < sizeof(numbers)/sizeof(int) ; ++i)
+    {
+        ListPushHead(list, &numbers[i]);
+    }
+
+    ListItr it = ListFind(list, &target, compareInts);
+    void* expectedToBe42 = ListItrGet(it);
+    assert(compareInts((void*)&target, expectedToBe42));
+    for (size_t i = 0 ; i < sizeof(numbers)/sizeof(int) ; ++i)
+    {
+        void* target = (void*)&numbers[i];
+        it = ListFind(list, target, compareInts);
+        assert(ListItrGet(it) == target);
+    }
+    
+    ListDestroy(&list, NULL);
+    printf("  PASS\n");
+
+
+}
 
 static void test_create_destroy(void)
 {
@@ -244,6 +291,7 @@ int main(void)
     test_foreach_full();
     test_foreach_early_stop();
     test_null_safety();
+    test_list_find();
     printf("=== ALL PASSED ===\n");
     return 0;
 }

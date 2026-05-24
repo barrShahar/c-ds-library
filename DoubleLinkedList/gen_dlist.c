@@ -238,3 +238,19 @@ static void ListConnectBetweenNodes(Node* _lValue, Node* _rValue)
     _rValue->m_prev = _lValue;
 }
 
+ListItr ListFind(List* _list, void* _target, int (*Compare)(void* _toFind, void* _currItem))
+{
+    if (_list == NULL || _target == NULL || Compare == NULL) { return NULL; }
+    
+    Node* end = LIST_END(_list);
+    for (Node* it = LIST_BEGIN(_list) ; it != end ; it = it->m_next)
+    {
+        if (_target == it->m_data ||
+            (Compare && Compare(_target, it->m_data)))
+        {
+            return it;
+        }
+    }
+
+    return NULL;
+}
