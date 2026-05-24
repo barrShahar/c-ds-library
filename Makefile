@@ -9,6 +9,7 @@ BIN_TREE_DIR = BinTree
 GEN_HEAP_DIR = GenHeap
 DLIST_DIR = DoubleLinkedList
 QUEUE_DIR = GenQueue
+STACK_DIR = GenStack
 BIN_DIR = bin
 LIB_DIR = lib
 $(shell mkdir -p $(BIN_DIR))
@@ -17,22 +18,23 @@ $(shell mkdir -p $(LIB_DIR))
 # Creating a static library for the project
 TARGET_STATIC_LIB = $(LIB_DIR)/lib$(PROJECT_NAME).a
 
-ALL_OBJS = $(BIN_DIR)/vector.o $(BIN_DIR)/HashMap.o $(BIN_DIR)/bin_tree.o $(BIN_DIR)/genHeap.o $(BIN_DIR)/gen_dlist.o $(BIN_DIR)/genqueue.o
+ALL_OBJS = $(BIN_DIR)/vector.o \
+$(BIN_DIR)/HashMap.o \
+$(BIN_DIR)/bin_tree.o \
+$(BIN_DIR)/genHeap.o \
+$(BIN_DIR)/gen_dlist.o \
+$(BIN_DIR)/genqueue.o \
+$(BIN_DIR)/genstack.o
 
 all: $(TARGET_STATIC_LIB)
 
 $(TARGET_STATIC_LIB): $(ALL_OBJS) 
 	$(AR) $@ $^
 
-# Create bin directory if not exists
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
-# Create lib directory if not exists
-$(LIB_DIR):
-	mkdir -p $(LIB_DIR)
-
 $(BIN_DIR)/%.o: $(VECTOR_DIR)/%.c 
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(BIN_DIR)/%.o: $(STACK_DIR)/%.c 
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BIN_DIR)/%.o: $(HASH_MAP_DIR)/%.c 
