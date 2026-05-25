@@ -21,6 +21,7 @@ typedef enum Map_Result {
 	MAP_SUCCESS = 0,
 	MAP_UNINITIALIZED_ERROR, 		/**< Uninitialized map error 	*/
 	MAP_KEY_NULL_ERROR, 			/**< Key was null 				*/
+	MAP_NULL_PTR_ERROR, 			/**< Null pointer error 		*/
 	MAP_KEY_DUPLICATE_ERROR, 		/**< Duplicate key error 		*/
 	MAP_KEY_NOT_FOUND_ERROR, 		/**< Key not found 				*/
 	MAP_ALLOCATION_ERROR 			/**< Allocation error 	 		*/

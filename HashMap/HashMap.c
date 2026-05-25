@@ -21,12 +21,13 @@ struct HashMap
 
 // Macros
 #define HASH_GET_IDX(map,key) ((map)->m_hashFunction((key)) % (map)->m_capacity)
-#define GET_BUCKET(map,key) (map->m_buckets[HASH_GET_IDX(map,key)])
+#define GET_BUCKET(map,key) ((map)->m_buckets[HASH_GET_IDX(map,key)])
 
 // Helper functions
 static const Item* HashMapMakeItem(const void* _key, const void* _value);
 static ListItr FindKeyInBucket(const void* _key, const EqualityFunction _eq, const ListItr _start, const ListItr _end);
 static MapResult CheckParams(const HashMap* _map, const void* _key);
+static MapResult CheckParamsRemove(const HashMap* _map, const void* _key, void** _pKey, void** _pValue);
 static MapResult InsertItemToBucket(List* _bucket, const void* _key, const void* _value);
 static size_t GetNextPrime(size_t _number);
 static int BucketActionAdapter(void* _element, void* _context);
@@ -132,11 +133,11 @@ MapResult HashMap_Insert(HashMap* _map, const void* _key, const void* _value)
 MapResult HashMap_Remove(HashMap* _map, const void* _searchKey, void** _pKey, void** _pValue)
 {
     // Check params
-    MapResult status = CheckParams(_map, _searchKey);
+    MapResult status = CheckParamsRemove(_map, _searchKey, _pKey, _pValue);
     if (status != MAP_SUCCESS)
     {
-        *_pKey = NULL;
-        *_pValue = NULL;
+        if (_pKey) { *_pKey   = NULL; }
+        if (_pValue) { *_pValue = NULL; }
         return status;
     }
 
@@ -235,8 +236,7 @@ size_t HashMap_ForEach(const HashMap* _map, KeyValueActionFunction _action, void
         ListItrForEach(ListItrBegin(bucket), ListItrEnd(bucket), BucketActionAdapter, &ctxWrapper);   
     }
 
-    size_t iterationsNumber = ctxWrapper.m_count;
-    return iterationsNumber;
+    return ctxWrapper.m_count;
 }
 
 
@@ -303,6 +303,30 @@ static ListItr FindKeyInBucket(const void* _key, const EqualityFunction _eq, con
 
 static MapResult CheckParams(const HashMap* _map, const void* _key)
 {
+    if (_map == NULL)
+    {
+        return MAP_UNINITIALIZED_ERROR;
+    }
+
+    if (_key == NULL)
+    {
+        return MAP_KEY_NULL_ERROR;
+    }
+
+    return MAP_SUCCESS;
+}
+
+static MapResult CheckParamsRemove(const HashMap* _map, const void* _key, void** _pKey, void** _pValue)
+{
+    if (_pKey == NULL)
+    {
+        return MAP_NULL_PTR_ERROR;
+    }
+
+    if (_pValue == NULL)
+    {
+        return MAP_NULL_PTR_ERROR;
+    }
     if (_map == NULL)
     {
         return MAP_UNINITIALIZED_ERROR;
