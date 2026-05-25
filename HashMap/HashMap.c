@@ -184,6 +184,12 @@ MapResult HashMap_Find(const HashMap* _map, const void* _key, void** _pValue)
 
     // Get bucket
     List* bucket = GET_BUCKET(_map, _key);
+    if (bucket == NULL)
+    {
+        *_pValue = NULL;
+        return MAP_KEY_NOT_FOUND_ERROR;
+    }
+
     ListItr beginBucket = ListItrBegin(bucket);
     ListItr endBucket   = ListItrEnd(bucket);
 
@@ -222,6 +228,10 @@ size_t HashMap_ForEach(const HashMap* _map, KeyValueActionFunction _action, void
     for (size_t i = 0 ; i < _map->m_capacity ; ++i)
     {
         List* bucket = _map->m_buckets[i];
+        if (bucket == NULL)
+        {
+            continue;
+        }
         ListItrForEach(ListItrBegin(bucket), ListItrEnd(bucket), BucketActionAdapter, &ctxWrapper);   
     }
 
