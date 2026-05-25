@@ -314,7 +314,12 @@ static MapResult InsertItemToBucket(List* _bucket, const void* _key, const void*
         return MAP_ALLOCATION_ERROR;
     }
 
-    return ListPushTail(_bucket, (void*) itemToInsert) ? MAP_SUCCESS : MAP_ALLOCATION_ERROR;
+    if (ListPushTail(_bucket, (void*) itemToInsert) == NULL)
+    {
+        free((void*)itemToInsert);
+        return MAP_ALLOCATION_ERROR;
+    }
+    return MAP_SUCCESS;
 }
 
 static int BucketActionAdapter(void* _element, void* _context)

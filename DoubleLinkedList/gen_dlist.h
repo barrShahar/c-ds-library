@@ -167,7 +167,7 @@ ListItr ListItrForEach(ListItr _begin, ListItr _end, ListActionFunction _action,
  * @param Compare 
  * @return ListItr 
  */
-ListItr ListFind(List* _list, void* _toFind, int (*Compare)(void* _target, void* _currItem));
+ListItr ListFind(List* _list, const void* _target, int (*Compare)(const void* _target, const void* _currItem));
 
 
 #endif /* __NEW_GEN_DLIST_H__ */

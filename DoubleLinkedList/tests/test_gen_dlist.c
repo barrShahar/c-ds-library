@@ -16,7 +16,7 @@ static int stop_at_5(void* _element, void* _context)
     return *(int*)_element != 5;
 }
 
-static int compareInts(void* a, void* b)
+static int compareInts(const void* a, const void* b)
 {
     return *(int*)a == *(int*)b;
 }
@@ -55,7 +55,11 @@ static void test_list_find(void)
     for (size_t i = 0 ; i < sizeof(numbers)/sizeof(int) ; ++i)
     {
         void* target = (void*)&numbers[i];
+        
         it = ListFind(list, target, compareInts);
+        assert(ListItrGet(it) == target);
+
+        it = ListFind(list, target, NULL);
         assert(ListItrGet(it) == target);
     }
     
