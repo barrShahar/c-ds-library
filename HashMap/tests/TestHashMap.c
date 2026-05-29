@@ -219,10 +219,6 @@ static int test_remove_errors(void)
                 "Remove with NULL map should fail");
     ASSERT_TEST(HashMap_Remove(map, NULL, &pKey, &pValue) == MAP_KEY_NULL_ERROR,
                 "Remove with NULL key should fail");
-    ASSERT_TEST(HashMap_Remove(map, &key, NULL, &pValue) == MAP_NULL_PTR_ERROR,
-                "Remove with NULL pKey should fail");
-    ASSERT_TEST(HashMap_Remove(map, &key, &pKey, NULL) == MAP_NULL_PTR_ERROR,
-                "Remove with NULL pValue should fail");
 
     ASSERT_TEST(HashMap_Remove(map, &key, &pKey, &pValue) == MAP_SUCCESS, "Remove should succeed");
     ASSERT_TEST(HashMap_Size(map) == 0, "Size should be 0 after remove");

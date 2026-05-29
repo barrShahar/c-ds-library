@@ -28,7 +28,6 @@ struct HashMap
 static const Item* HashMapMakeItem(const void* _key, const void* _value);
 static ListItr FindKeyInBucket(const void* _key, const EqualityFunction _eq, const ListItr _start, const ListItr _end);
 static MapResult CheckParams(const HashMap* _map, const void* _key);
-static MapResult CheckParamsRemove(const HashMap* _map, const void* _key, void** _pKey, void** _pValue);
 static MapResult InsertItemToBucket(List* _bucket, const void* _key, const void* _value);
 static size_t GetNextPrime(size_t _number);
 static int BucketActionAdapter(void* _element, void* _context);
@@ -134,11 +133,11 @@ MapResult HashMap_Insert(HashMap* _map, const void* _key, const void* _value)
 MapResult HashMap_Remove(HashMap* _map, const void* _searchKey, void** _pKey, void** _pValue)
 {
     // Check params
-    MapResult status = CheckParamsRemove(_map, _searchKey, _pKey, _pValue);
+    MapResult status = CheckParams(_map, _searchKey);
     if (status != MAP_SUCCESS)
     {
-        if (_pKey) { *_pKey   = NULL; }
-        if (_pValue) { *_pValue = NULL; }
+        HASHMAP_SAFE_DEREF_SET(_pKey, NULL);
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return status;
     }
 
@@ -146,8 +145,8 @@ MapResult HashMap_Remove(HashMap* _map, const void* _searchKey, void** _pKey, vo
     List* bucket = GET_BUCKET(_map, _searchKey);
     if (bucket == NULL)
     {
-        *_pKey = NULL;
-        *_pValue = NULL;
+        HASHMAP_SAFE_DEREF_SET(_pKey, NULL);
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return MAP_KEY_NOT_FOUND_ERROR;
     }
 
@@ -158,15 +157,15 @@ MapResult HashMap_Remove(HashMap* _map, const void* _searchKey, void** _pKey, vo
     ListItr it = FindKeyInBucket(_searchKey, _map->m_equalityFunction, beginBucket, endBucket);
     if (it == endBucket)
     {
-        *_pKey = NULL;
-        *_pValue = NULL;
+        HASHMAP_SAFE_DEREF_SET(_pKey, NULL);
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return MAP_KEY_NOT_FOUND_ERROR;
     }
 
     // Returning key-value
     Item* item = ListItrRemove(it);
-    *_pKey = item->m_key;
-    *_pValue = item->m_value;
+    HASHMAP_SAFE_DEREF_SET(_pKey, item->m_key);
+    HASHMAP_SAFE_DEREF_SET(_pValue, item->m_value);
 
     // Free key-value item holder
     free(item);
@@ -318,29 +317,6 @@ static MapResult CheckParams(const HashMap* _map, const void* _key)
     return MAP_SUCCESS;
 }
 
-static MapResult CheckParamsRemove(const HashMap* _map, const void* _key, void** _pKey, void** _pValue)
-{
-    if (_pKey == NULL)
-    {
-        return MAP_NULL_PTR_ERROR;
-    }
-
-    if (_pValue == NULL)
-    {
-        return MAP_NULL_PTR_ERROR;
-    }
-    if (_map == NULL)
-    {
-        return MAP_UNINITIALIZED_ERROR;
-    }
-
-    if (_key == NULL)
-    {
-        return MAP_KEY_NULL_ERROR;
-    }
-
-    return MAP_SUCCESS;
-}
 
 static MapResult InsertItemToBucket(List* _bucket, const void* _key, const void* _value)
 {
