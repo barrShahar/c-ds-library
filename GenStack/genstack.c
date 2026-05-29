@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "genstack.h"
-#include "../GenVector/vector.h"
+#include "../GenVector/Vector.h"
 
 
 struct Stack

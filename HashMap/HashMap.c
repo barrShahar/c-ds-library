@@ -22,7 +22,8 @@ struct HashMap
 // Macros
 #define HASH_GET_IDX(map,key) ((map)->m_hashFunction((key)) % (map)->m_capacity)
 #define GET_BUCKET(map,key) ((map)->m_buckets[HASH_GET_IDX(map,key)])
-
+#define HASHMAP_SAFE_DEREF_SET(ptr, value) \
+    do { if (ptr) { *(ptr) = (value); } } while (0)
 // Helper functions
 static const Item* HashMapMakeItem(const void* _key, const void* _value);
 static ListItr FindKeyInBucket(const void* _key, const EqualityFunction _eq, const ListItr _start, const ListItr _end);
@@ -173,13 +174,14 @@ MapResult HashMap_Remove(HashMap* _map, const void* _searchKey, void** _pKey, vo
     return MAP_SUCCESS;
 }
 
+
 MapResult HashMap_Find(const HashMap* _map, const void* _key, void** _pValue)
 {
     // Check params
     MapResult status = CheckParams(_map, _key);
     if (status != MAP_SUCCESS) 
     {
-        *_pValue = NULL;
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return status; 
     }
 
@@ -187,7 +189,7 @@ MapResult HashMap_Find(const HashMap* _map, const void* _key, void** _pValue)
     List* bucket = GET_BUCKET(_map, _key);
     if (bucket == NULL)
     {
-        *_pValue = NULL;
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return MAP_KEY_NOT_FOUND_ERROR;
     }
 
@@ -198,12 +200,12 @@ MapResult HashMap_Find(const HashMap* _map, const void* _key, void** _pValue)
     ListItr it = FindKeyInBucket(_key, _map->m_equalityFunction, beginBucket, endBucket);
     if (it == endBucket)
     {
-        *_pValue = NULL;
+        HASHMAP_SAFE_DEREF_SET(_pValue, NULL);
         return MAP_KEY_NOT_FOUND_ERROR;
     }
 
     Item* item = ListItrGet(it);
-    *_pValue = item->m_value;
+    HASHMAP_SAFE_DEREF_SET(_pValue, item->m_value);
 
     return MAP_SUCCESS;
 }

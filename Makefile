@@ -18,7 +18,7 @@ $(shell mkdir -p $(LIB_DIR))
 # Creating a static library for the project
 TARGET_STATIC_LIB = $(LIB_DIR)/lib$(PROJECT_NAME).a
 
-ALL_OBJS = $(BIN_DIR)/vector.o \
+ALL_OBJS = $(BIN_DIR)/Vector.o \
 $(BIN_DIR)/HashMap.o \
 $(BIN_DIR)/bin_tree.o \
 $(BIN_DIR)/genHeap.o \
