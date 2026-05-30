@@ -246,7 +246,7 @@ ListItr ListFind(List* _list, const void* _target, int (*Compare)(const void* _t
     for (Node* it = LIST_BEGIN(_list) ; it != end ; it = it->m_next)
     {
         if (_target == it->m_data ||
-            (Compare && Compare(_target, it->m_data)))
+            (Compare && Compare(_target, it->m_data) == 0))
         {
             return it;
         }

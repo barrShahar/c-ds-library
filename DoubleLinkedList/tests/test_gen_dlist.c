@@ -18,7 +18,7 @@ static int stop_at_5(void* _element, void* _context)
 
 static int compareInts(const void* a, const void* b)
 {
-    return *(int*)a == *(int*)b;
+    return *(int*)a - *(int*)b;
 }
 
 /* ── tests ── */
@@ -51,7 +51,7 @@ static void test_list_find(void)
 
     ListItr it = ListFind(list, &target, compareInts);
     void* expectedToBe42 = ListItrGet(it);
-    assert(compareInts((void*)&target, expectedToBe42));
+    assert(compareInts((void*)&target, expectedToBe42) == 0);
     for (size_t i = 0 ; i < sizeof(numbers)/sizeof(int) ; ++i)
     {
         void* target = (void*)&numbers[i];
